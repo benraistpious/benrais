@@ -1,4 +1,5 @@
 # Ignore local Node.js SQLite server files on Vercel
+local-server.js
 server.js
 data/
 Dockerfile

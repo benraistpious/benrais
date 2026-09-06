@@ -1,24 +1,32 @@
-const { DatabaseSync } = require('node:sqlite');
+let DatabaseSync = null;
+try {
+  DatabaseSync = require('node:sqlite').DatabaseSync;
+} catch (e) {
+  // SQLite built-in module not available in this environment
+}
+
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 
-const DATA_DIR = process.env.DATA_DIR || path.join(__dirname);
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-}
-
-const DB_PATH = process.env.DB_PATH || path.join(DATA_DIR, 'portfolio.db');
-const db = new DatabaseSync(DB_PATH);
-
-// Enable foreign keys and WAL mode for reliability
-db.exec('PRAGMA foreign_keys = ON;');
-
-// Initialize schema (schema.sql is located in the codebase directory)
-const schemaPath = path.join(__dirname, 'schema.sql');
-if (fs.existsSync(schemaPath)) {
-  const schemaSql = fs.readFileSync(schemaPath, 'utf8');
-  db.exec(schemaSql);
+let db = null;
+if (DatabaseSync) {
+  try {
+    const DATA_DIR = process.env.DATA_DIR || path.join(__dirname);
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+    const DB_PATH = process.env.DB_PATH || path.join(DATA_DIR, 'portfolio.db');
+    db = new DatabaseSync(DB_PATH);
+    db.exec('PRAGMA foreign_keys = ON;');
+    const schemaPath = path.join(__dirname, 'schema.sql');
+    if (fs.existsSync(schemaPath)) {
+      const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+      db.exec(schemaSql);
+    }
+  } catch (err) {
+    console.warn('SQLite init warning:', err.message);
+  }
 }
 
 // Security & Password Helpers

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Portfolio and CMS backend for Benrais T Pious",
   "scripts": {
-    "start": "node server.js",
+    "start": "node local-server.js",
     "seed": "node data/seed.js",
     "migrate:supabase": "node scripts/migrate-to-supabase.js",
     "test:api": "node scripts/test-api.js"
