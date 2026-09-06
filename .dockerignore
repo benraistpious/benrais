@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+.agents
+Protfolio-benrais
+.env*
+npm-debug.log
+.DS_Store

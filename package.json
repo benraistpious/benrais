@@ -1,0 +1,25 @@
+{
+  "name": "portfolio-cms",
+  "version": "1.0.0",
+  "description": "Portfolio and CMS backend for Benrais T Pious",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node data/seed.js",
+    "migrate:supabase": "node scripts/migrate-to-supabase.js",
+    "test:api": "node scripts/test-api.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "portfolio",
+    "cms",
+    "graphic-designer"
+  ],
+  "author": "Benrais T Pious",
+  "license": "ISC"
+}

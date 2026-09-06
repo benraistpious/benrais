@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
+    {
+      "source": "/",
+      "destination": "/portfolio.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/posters",
+      "destination": "/posters.html"
+    },
+    {
+      "source": "/lead-ads",
+      "destination": "/lead-ads.html"
+    },
+    {
+      "source": "/uiux",
+      "destination": "/uiux.html"
+    },
+    {
+      "source": "/branding",
+      "destination": "/branding.html"
+    },
+    {
+      "source": "/project-view",
+      "destination": "/project-view.html"
+    }
+  ]
+}

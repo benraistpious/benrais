@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Project 1 | UI/UX | Benrais T Pious</title>
+  <link rel="icon" href="favicon_io/favicon.ico" sizes="32x32">
+  <link rel="icon" href="favicon_io/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="font (2)/stylesheet.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script src="gsap-public/gsap-public/minified/gsap.min.js"></script>
+  <script src="gsap-public/gsap-public/minified/SplitText.min.js"></script>
+</head>
+<body>
+
+  <nav>
+    <a href="javascript:history.back()" style="display: flex; align-items: center; gap: 8px;">
+      <iconify-icon icon="ph:arrow-left-light"></iconify-icon> Back
+    </a>
+  </nav>
+
+  <div class="container" style="padding-top: 120px;" id="project-container">
+    <!-- Page Header (Dynamic) -->
+    <div id="project-header" class="bento-card" style="margin-bottom: 24px; text-align: center; padding: 60px 40px;">
+      <div class="spinner" style="width: 40px; height: 40px; border: 4px solid rgba(0,0,0,0.1); border-top-color: var(--text-primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+      <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
+    </div>
+
+    <!-- Behance Style Presentation Container (Dynamic) -->
+    <div id="project-images" style="width: 100%; display: flex; flex-direction: column; gap: 0; background: rgba(0,0,0,0.02); border-radius: var(--bento-radius); overflow: hidden;">
+    </div>
+
+    <!-- Contact CTA -->  </div>
+
+  <script src="js/animations.js"></script>
+  <script src="js/cms-frontend.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      loadProjectView();
+    });
+  </script>
+</body>
+</html>

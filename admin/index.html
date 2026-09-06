@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin CMS | Benrais T Pious Portfolio</title>
+  <link rel="icon" href="../favicon_io/favicon.ico" sizes="32x32">
+  <link rel="icon" href="../favicon_io/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+  <!-- Login Screen -->
+  <div id="loginScreen" class="login-wrapper">
+    <div class="login-box">
+      <div class="login-header">
+        <div class="logo-badge">
+          <iconify-icon icon="ph:shield-check-fill"></iconify-icon>
+        </div>
+        <h2>Portfolio CMS</h2>
+        <p>Sign in to manage projects, categories, and content.</p>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="usernameInput">Username</label>
+          <input type="text" id="usernameInput" required placeholder="admin" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="passwordInput">Password</label>
+          <input type="password" id="passwordInput" required placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-primary full-width" id="loginBtn">
+          <span>Sign In</span>
+          <iconify-icon icon="ph:arrow-right-bold"></iconify-icon>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Main Layout -->
+  <div id="adminLayout" class="admin-layout" style="display: none;">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <span class="brand-dot"></span>
+          <h3>Benrais CMS</h3>
+        </div>
+        <a href="../portfolio.html" target="_blank" class="preview-site-link" title="View Public Website">
+          <iconify-icon icon="ph:arrow-square-out-light"></iconify-icon>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="dashboard">
+          <iconify-icon icon="ph:squares-four-light"></iconify-icon>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-tab="projects">
+          <iconify-icon icon="ph:folder-light"></iconify-icon>
+          <span>Projects</span>
+        </button>
+        <button class="nav-item" data-tab="categories">
+          <iconify-icon icon="ph:tag-light"></iconify-icon>
+          <span>Categories</span>
+        </button>
+        <button class="nav-item" data-tab="about">
+          <iconify-icon icon="ph:user-circle-light"></iconify-icon>
+          <span>About & Contact</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <iconify-icon icon="ph:gear-light"></iconify-icon>
+          <span>Settings</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-pill">
+          <iconify-icon icon="ph:user-bold"></iconify-icon>
+          <span id="adminUsernameDisplay">admin</span>
+        </div>
+        <button id="logoutBtn" class="btn-ghost" title="Logout">
+          <iconify-icon icon="ph:sign-out-light"></iconify-icon>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="page-title">
+          <h1 id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-secondary" id="refreshDataBtn">
+            <iconify-icon icon="ph:arrows-clockwise-light"></iconify-icon>
+            <span>Refresh</span>
+          </button>
+          <button class="btn-primary" id="topAddProjectBtn">
+            <iconify-icon icon="ph:plus-bold"></iconify-icon>
+            <span>New Project</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: DASHBOARD -->
+      <section id="tab-dashboard" class="tab-pane active">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon icon-blue">
+              <iconify-icon icon="ph:folders-light"></iconify-icon>
+            </div>
+            <div class="stat-meta">
+              <span class="stat-label">Total Projects</span>
+              <h2 id="statTotalProjects">0</h2>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon icon-green">
+              <iconify-icon icon="ph:check-circle-light"></iconify-icon>
+            </div>
+            <div class="stat-meta">
+              <span class="stat-label">Published</span>
+              <h2 id="statPublishedProjects">0</h2>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon icon-orange">
+              <iconify-icon icon="ph:pencil-simple-line-light"></iconify-icon>
+            </div>
+            <div class="stat-meta">
+              <span class="stat-label">Drafts</span>
+              <h2 id="statDraftProjects">0</h2>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon icon-purple">
+              <iconify-icon icon="ph:tag-light"></iconify-icon>
+            </div>
+            <div class="stat-meta">
+              <span class="stat-label">Categories</span>
+              <h2 id="statCategories">0</h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Projects Section -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3>Recently Added Projects</h3>
+            <button class="btn-link" id="viewAllProjectsBtn">View All Projects →</button>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Cover</th>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Featured</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recentProjectsTableBody">
+                <tr><td colspan="7" class="empty-cell">Loading projects...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: PROJECTS -->
+      <section id="tab-projects" class="tab-pane">
+        <div class="toolbar-panel">
+          <div class="search-wrap">
+            <iconify-icon icon="ph:magnifying-glass-light"></iconify-icon>
+            <input type="text" id="projectSearchInput" placeholder="Search by title, client, description...">
+          </div>
+          <div class="filter-wrap">
+            <select id="projectCategoryFilter">
+              <option value="all">All Categories</option>
+            </select>
+            <select id="projectStatusFilter">
+              <option value="all">All Status</option>
+              <option value="published">Published Only</option>
+              <option value="draft">Drafts Only</option>
+            </select>
+            <button class="btn-primary" id="addProjectBtn">
+              <iconify-icon icon="ph:plus-bold"></iconify-icon>
+              <span>Add Project</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 40px;">Order</th>
+                  <th style="width: 70px;">Cover</th>
+                  <th>Project Details</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Featured</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="projectsTableBody">
+                <tr><td colspan="7" class="empty-cell">Loading projects...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: CATEGORIES -->
+      <section id="tab-categories" class="tab-pane">
+        <div class="toolbar-panel">
+          <p class="toolbar-info">Categories define portfolio sections and filter options on the public website.</p>
+          <button class="btn-primary" id="addCategoryBtn">
+            <iconify-icon icon="ph:plus-bold"></iconify-icon>
+            <span>Add Category</span>
+          </button>
+        </div>
+
+        <div class="panel-card">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">Order</th>
+                  <th>Category Name</th>
+                  <th>Slug / URL</th>
+                  <th>Icon</th>
+                  <th>Description</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="categoriesTableBody">
+                <tr><td colspan="6" class="empty-cell">Loading categories...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: ABOUT & CONTACT -->
+      <section id="tab-about" class="tab-pane">
+        <form id="aboutSettingsForm">
+          <div class="grid-2-col">
+            <!-- Profile & Hero Info -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3>Profile & Hero Presentation</h3>
+              </div>
+              <div class="form-group">
+                <label>Designer Name</label>
+                <input type="text" id="aboutName" placeholder="Benrais T Pious" required>
+              </div>
+              <div class="form-group">
+                <label>Professional Title</label>
+                <input type="text" id="aboutProfession" placeholder="Graphic Designer">
+              </div>
+              <div class="form-group">
+                <label>Hero Greeting Line</label>
+                <input type="text" id="aboutHeroGreeting" placeholder="Hello, I'm Benrais.">
+              </div>
+              <div class="form-group">
+                <label>Hero Tagline / Focus</label>
+                <textarea id="aboutHeroTagline" rows="3" placeholder="Graphic designer focused on brand identity, layout, and visual communication."></textarea>
+              </div>
+              <div class="form-group">
+                <label>Profile Picture URL / File</label>
+                <div class="input-with-upload">
+                  <input type="text" id="aboutProfileImage" placeholder="pfp 1.png">
+                  <button type="button" class="btn-secondary btn-sm" onclick="document.getElementById('profileImageUpload').click()">Upload</button>
+                  <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Infinite Marquee Banner Text</label>
+                <textarea id="aboutMarqueeText" rows="2" placeholder="UI/UX DESIGN • BRAND IDENTITY • LAYOUT • VISUAL COMMUNICATION"></textarea>
+                <span class="field-hint">Items separated by • will be formatted across the marquee.</span>
+              </div>
+            </div>
+
+            <!-- Contact & Social Channels -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3>Contact Channels</h3>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="aboutEmail" placeholder="benraistpious@gmail.com">
+              </div>
+              <div class="form-group">
+                <label>WhatsApp Number</label>
+                <input type="text" id="aboutWhatsapp" placeholder="+91 6282629144">
+              </div>
+              <div class="form-group">
+                <label>WhatsApp Direct Link</label>
+                <input type="text" id="aboutWhatsappLink" placeholder="https://wa.me/916282629144">
+              </div>
+              <div class="form-group">
+                <label>LinkedIn Handle</label>
+                <input type="text" id="aboutLinkedinHandle" placeholder="@benraistpious">
+              </div>
+              <div class="form-group">
+                <label>LinkedIn Profile Link</label>
+                <input type="text" id="aboutLinkedinLink" placeholder="https://www.linkedin.com/in/benraistpious">
+              </div>
+            </div>
+          </div>
+
+          <!-- Career Experience Timeline -->
+          <div class="panel-card" style="margin-top: 24px;">
+            <div class="panel-header">
+              <h3>Career Experience Timeline</h3>
+              <button type="button" class="btn-secondary btn-sm" id="addExperienceBtn">
+                <iconify-icon icon="ph:plus-bold"></iconify-icon> Add Experience
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Company</th>
+                    <th>Role</th>
+                    <th>Duration</th>
+                    <th>Description</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="experienceTableBody">
+                  <tr><td colspan="5" class="empty-cell">Loading experience...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="form-actions sticky-actions">
+            <button type="submit" class="btn-primary" id="saveAboutBtn">
+              <iconify-icon icon="ph:floppy-disk-back-light"></iconify-icon>
+              <span>Save About & Contact</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- TAB 5: SETTINGS -->
+      <section id="tab-settings" class="tab-pane">
+        <div class="panel-card" style="max-width: 600px;">
+          <div class="panel-header">
+            <h3>Change Admin Password</h3>
+          </div>
+          <form id="changePasswordForm">
+            <div class="form-group">
+              <label for="currentPasswordInput">Current Password</label>
+              <input type="password" id="currentPasswordInput" required placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label for="newPasswordInput">New Password</label>
+              <input type="password" id="newPasswordInput" required placeholder="Minimum 6 characters">
+            </div>
+            <div class="form-group">
+              <label for="confirmPasswordInput">Confirm New Password</label>
+              <input type="password" id="confirmPasswordInput" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn-primary">
+              <iconify-icon icon="ph:key-light"></iconify-icon>
+              <span>Update Password</span>
+            </button>
+          </form>
+        </div>
+
+        <div class="panel-card" style="max-width: 600px; margin-top: 24px;">
+          <div class="panel-header">
+            <h3>System Information</h3>
+          </div>
+          <div class="info-list">
+            <div class="info-row">
+              <span class="info-label">Database</span>
+              <span class="info-value">SQLite (Local persistent database in <code>data/portfolio.db</code>)</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Image Storage</span>
+              <span class="info-value">Local multi-upload in <code>uploads/</code></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Public Portfolio</span>
+              <span class="info-value"><a href="../portfolio.html" target="_blank">portfolio.html</a></span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- PROJECT MODAL (Add / Edit) -->
+  <div id="projectModal" class="modal-overlay">
+    <div class="modal-container modal-large">
+      <div class="modal-header">
+        <h2 id="projectModalTitle">Add New Project</h2>
+        <button class="btn-close" id="closeProjectModalBtn">
+          <iconify-icon icon="ph:x-bold"></iconify-icon>
+        </button>
+      </div>
+      <form id="projectForm">
+        <input type="hidden" id="projectId">
+        
+        <div class="modal-body">
+          <!-- Modal Tabs -->
+          <div class="sub-tabs">
+            <button type="button" class="sub-tab active" data-subtab="project-basic">1. Basic Info</button>
+            <button type="button" class="sub-tab" data-subtab="project-design">2. Design Info</button>
+            <button type="button" class="sub-tab" data-subtab="project-media">3. Media & Gallery</button>
+            <button type="button" class="sub-tab" data-subtab="project-publish">4. Publishing</button>
+          </div>
+
+          <!-- Subtab 1: Basic Info -->
+          <div id="subtab-project-basic" class="subtab-pane active">
+            <div class="form-group">
+              <label for="projTitle">Project Title *</label>
+              <input type="text" id="projTitle" required placeholder="e.g. Apex Studio Brand Identity">
+            </div>
+
+            <div class="grid-2-col">
+              <div class="form-group">
+                <label for="projCategory">Category *</label>
+                <select id="projCategory" required>
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="projSlug">URL Slug (Auto-generated if blank)</label>
+                <input type="text" id="projSlug" placeholder="apex-studio-brand-identity">
+              </div>
+            </div>
+
+            <div class="grid-2-col">
+              <div class="form-group">
+                <label for="projClient">Client / Brand</label>
+                <input type="text" id="projClient" placeholder="e.g. Apex Architecture">
+              </div>
+              <div class="form-group">
+                <label for="projYear">Year</label>
+                <input type="text" id="projYear" placeholder="2024">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="projShortDesc">Short Description (Card preview)</label>
+              <textarea id="projShortDesc" rows="2" placeholder="Brief summary displayed on project cards..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="projDesc">Full Description (Detail view)</label>
+              <textarea id="projDesc" rows="4" placeholder="Comprehensive project description and background..."></textarea>
+            </div>
+          </div>
+
+          <!-- Subtab 2: Design Info -->
+          <div id="subtab-project-design" class="subtab-pane">
+            <div class="form-group">
+              <label for="projObjective">Design Objective</label>
+              <textarea id="projObjective" rows="3" placeholder="What problem was this design created to solve?"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="projTools">Tools / Software Used</label>
+              <input type="text" id="projTools" placeholder="e.g. Figma, Illustrator, Photoshop, GSAP">
+              <span class="field-hint">Comma separated list of creative software or tools.</span>
+            </div>
+
+            <div class="form-group">
+              <label for="projTags">Tags / Keywords</label>
+              <input type="text" id="projTags" placeholder="e.g. Branding, Minimal, Typography, Identity">
+              <span class="field-hint">Comma separated tags.</span>
+            </div>
+          </div>
+
+          <!-- Subtab 3: Media & Gallery -->
+          <div id="subtab-project-media" class="subtab-pane">
+            <!-- Cover Image -->
+            <div class="form-group">
+              <label>Cover Image (Required for Cards / Thumbnails) *</label>
+              <div class="cover-image-picker">
+                <div class="cover-preview" id="coverImagePreview">
+                  <iconify-icon icon="ph:image-light"></iconify-icon>
+                  <span>No cover image selected</span>
+                </div>
+                <div class="cover-controls">
+                  <input type="text" id="projCoverImage" placeholder="Image URL or upload file..." style="margin-bottom: 8px;">
+                  <button type="button" class="btn-secondary btn-sm" onclick="document.getElementById('coverFileInput').click()">
+                    <iconify-icon icon="ph:upload-simple-bold"></iconify-icon> Upload Cover File
+                  </button>
+                  <input type="file" id="coverFileInput" accept="image/*" style="display: none;">
+                </div>
+              </div>
+            </div>
+
+            <!-- Gallery Images / Presentation Slices -->
+            <div class="form-group" style="margin-top: 24px;">
+              <div class="gallery-header">
+                <div>
+                  <label style="margin-bottom: 2px;">Gallery Presentation Slices</label>
+                  <span class="field-hint">Images displayed sequentially in the Behance-style project view.</span>
+                </div>
+                <button type="button" class="btn-secondary btn-sm" onclick="document.getElementById('galleryFileInput').click()">
+                  <iconify-icon icon="ph:plus-bold"></iconify-icon> Add Images
+                </button>
+                <input type="file" id="galleryFileInput" multiple accept="image/*" style="display: none;">
+              </div>
+
+              <!-- Drag and Drop Dropzone -->
+              <div class="dropzone" id="galleryDropzone">
+                <iconify-icon icon="ph:cloud-arrow-up-light"></iconify-icon>
+                <p>Drag & drop multiple project images here, or <span>browse files</span></p>
+                <span class="dropzone-hint">Supports PNG, JPG, WEBP, GIF, SVG</span>
+              </div>
+
+              <!-- Gallery Items List -->
+              <div class="gallery-list" id="galleryItemsContainer">
+                <!-- Populated dynamically with drag/move reorder, set as cover, delete -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Subtab 4: Publishing -->
+          <div id="subtab-project-publish" class="subtab-pane">
+            <div class="form-group">
+              <label>Publishing State</label>
+              <div class="radio-toggle-group">
+                <label class="radio-card">
+                  <input type="radio" name="projPublished" value="1" checked>
+                  <div class="radio-card-body">
+                    <iconify-icon icon="ph:globe-hemisphere-west-light" style="color: #10b981;"></iconify-icon>
+                    <div>
+                      <strong>Published</strong>
+                      <p>Immediately visible to visitors on the public portfolio website.</p>
+                    </div>
+                  </div>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="projPublished" value="0">
+                  <div class="radio-card-body">
+                    <iconify-icon icon="ph:lock-simple-light" style="color: #f59e0b;"></iconify-icon>
+                    <div>
+                      <strong>Draft</strong>
+                      <p>Hidden from visitors. Only accessible here in the CMS.</p>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+              <label class="checkbox-label">
+                <input type="checkbox" id="projFeatured">
+                <span><strong>Featured Project</strong> (Highlight on homepage or featured sections)</span>
+              </label>
+            </div>
+
+            <div class="form-group" style="margin-top: 16px;">
+              <label for="projDisplayOrder">Display Order (Lower number appears first)</label>
+              <input type="number" id="projDisplayOrder" value="0" min="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-ghost" id="cancelProjectModalBtn">Cancel</button>
+          <button type="submit" class="btn-primary" id="saveProjectBtn">
+            <iconify-icon icon="ph:check-bold"></iconify-icon>
+            <span>Save Project</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CATEGORY MODAL (Add / Edit) -->
+  <div id="categoryModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 id="categoryModalTitle">Add Category</h2>
+        <button class="btn-close" id="closeCategoryModalBtn">
+          <iconify-icon icon="ph:x-bold"></iconify-icon>
+        </button>
+      </div>
+      <form id="categoryForm">
+        <input type="hidden" id="categoryEditId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="catName">Category Name *</label>
+            <input type="text" id="catName" required placeholder="e.g. Posters, UI/UX, 3D Art">
+          </div>
+          <div class="form-group">
+            <label for="catSlug">Slug / ID *</label>
+            <input type="text" id="catSlug" placeholder="e.g. posters">
+            <span class="field-hint">Used for URLs and page routes (e.g. posters.html).</span>
+          </div>
+          <div class="form-group">
+            <label for="catIcon">Iconify Icon</label>
+            <input type="text" id="catIcon" placeholder="ph:image-square-light" value="ph:folder-light">
+            <span class="field-hint">Iconify icon identifier (e.g. ph:image-square-light, ph:megaphone-light).</span>
+          </div>
+          <div class="form-group">
+            <label for="catDesc">Description</label>
+            <textarea id="catDesc" rows="3" placeholder="Category summary displayed on the category page header..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="catDisplayOrder">Display Order</label>
+            <input type="number" id="catDisplayOrder" value="0" min="0">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-ghost" id="cancelCategoryModalBtn">Cancel</button>
+          <button type="submit" class="btn-primary" id="saveCategoryBtn">
+            <iconify-icon icon="ph:check-bold"></iconify-icon>
+            <span>Save Category</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE MODAL (Add / Edit) -->
+  <div id="experienceModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 id="experienceModalTitle">Add Experience</h2>
+        <button class="btn-close" id="closeExperienceModalBtn">
+          <iconify-icon icon="ph:x-bold"></iconify-icon>
+        </button>
+      </div>
+      <form id="experienceForm">
+        <input type="hidden" id="expId">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="expCompany">Company / Organization *</label>
+            <input type="text" id="expCompany" required placeholder="e.g. Creative Studio">
+          </div>
+          <div class="form-group">
+            <label for="expRole">Role / Title *</label>
+            <input type="text" id="expRole" required placeholder="e.g. Senior Graphic Designer">
+          </div>
+          <div class="form-group">
+            <label for="expDuration">Duration *</label>
+            <input type="text" id="expDuration" required placeholder="e.g. 2023 - Present">
+          </div>
+          <div class="form-group">
+            <label for="expDesc">Description / Responsibilities</label>
+            <textarea id="expDesc" rows="4" placeholder="Details about your responsibilities, impact, and projects..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-ghost" id="cancelExperienceModalBtn">Cancel</button>
+          <button type="submit" class="btn-primary">
+            <iconify-icon icon="ph:check-bold"></iconify-icon>
+            <span>Save Experience</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Global Loader -->
+  <div id="loader" class="loader-overlay" style="display: none;">
+    <div class="spinner"></div>
+    <p id="loaderMessage">Processing...</p>
+  </div>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>
