@@ -109,11 +109,11 @@ module.exports = async function handler(req, res) {
     const rawUrl = req.url || '/api';
     const parsedUrl = new URL(rawUrl, `${proto}://${host}`);
 
-    // If Vercel rewrote /api/(.*) -> /api, x-matched-path holds the original path
+    // If Vercel rewrote /api/(.*) -> /api/index.js, x-matched-path holds the original path
     const matchedPath = req.headers['x-matched-path'];
-    let pathname = parsedUrl.pathname;
-    if (matchedPath && pathname === '/api') {
-      pathname = matchedPath;
+    let pathname = matchedPath || parsedUrl.pathname;
+    if (pathname.endsWith('/index.js')) {
+      pathname = pathname.replace(/\/index\.js$/, '');
     }
 
     const method = req.method;
