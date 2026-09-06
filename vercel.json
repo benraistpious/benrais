@@ -1,5 +1,4 @@
 {
-  "version": 2,
   "cleanUrls": true,
   "rewrites": [
     {
@@ -8,7 +7,7 @@
     },
     {
       "source": "/",
-      "destination": "/portfolio.html"
+      "destination": "/index.html"
     },
     {
       "source": "/admin",

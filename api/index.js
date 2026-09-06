@@ -92,32 +92,39 @@ function slugify(text) {
 }
 
 module.exports = async function handler(req, res) {
-  // CORS Preflight
-  if (req.method === 'OPTIONS') {
-    res.writeHead(204, {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Max-Age': '86400'
-    });
-    return res.end();
-  }
-
-  const client = getSupabase();
-  if (!client) {
-    return sendJson(res, 500, {
-      status: 'error',
-      message: 'Supabase configuration missing. Please set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'
-    });
-  }
-
-  const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost';
-  const proto = req.headers['x-forwarded-proto'] || 'http';
-  const parsedUrl = new URL(req.url, `${proto}://${host}`);
-  const pathname = parsedUrl.pathname;
-  const method = req.method;
-
   try {
+    // CORS Preflight
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204, {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Max-Age': '86400'
+      });
+      return res.end();
+    }
+
+    const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost';
+    const proto = req.headers['x-forwarded-proto'] || 'https';
+    const rawUrl = req.url || '/api';
+    const parsedUrl = new URL(rawUrl, `${proto}://${host}`);
+
+    // If Vercel rewrote /api/(.*) -> /api, x-matched-path holds the original path
+    const matchedPath = req.headers['x-matched-path'];
+    let pathname = parsedUrl.pathname;
+    if (matchedPath && pathname === '/api') {
+      pathname = matchedPath;
+    }
+
+    const method = req.method;
+
+    const client = getSupabase();
+    if (!client) {
+      return sendJson(res, 500, {
+        status: 'error',
+        message: 'Supabase configuration missing or invalid. Please set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables.'
+      });
+    }
     // ==========================================
     // 1. AUTHENTICATION ROUTES
     // ==========================================

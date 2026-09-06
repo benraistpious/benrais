@@ -1,0 +1,13 @@
+# Ignore local Node.js SQLite server files on Vercel
+server.js
+data/
+Dockerfile
+docker-compose.yml
+.dockerignore
+scripts/sync-sheets.js
+scripts/test-api.js
+test_fetch.js
+README.md
+DEPLOYMENT.md
+AGENTS.md
+CLAUDE.md
