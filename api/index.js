@@ -109,9 +109,12 @@ module.exports = async function handler(req, res) {
     const rawUrl = req.url || '/api';
     const parsedUrl = new URL(rawUrl, `${proto}://${host}`);
 
-    // If Vercel rewrote /api/(.*) -> /api/index.js, x-matched-path holds the original path
+    // If Vercel rewrote /api/(.*) -> /api/index.js or /api, x-matched-path holds the original path
     const matchedPath = req.headers['x-matched-path'];
-    let pathname = matchedPath || parsedUrl.pathname;
+    let pathname = parsedUrl.pathname;
+    if (matchedPath && !matchedPath.includes('[') && (pathname === '/api' || pathname === '/api/index' || pathname.endsWith('/index.js'))) {
+      pathname = matchedPath;
+    }
     if (pathname.endsWith('/index.js')) {
       pathname = pathname.replace(/\/index\.js$/, '');
     }
@@ -396,7 +399,7 @@ module.exports = async function handler(req, res) {
         await client.from('project_images').insert(imageRows);
       }
 
-      return sendJson(res, 201, { status: 'success', data: { id, slug } });
+      return sendJson(res, 201, { status: 'success', id, slug, data: { id, slug } });
     }
 
     if (pathname === '/api/admin/projects/reorder' && method === 'PATCH') {
@@ -456,7 +459,7 @@ module.exports = async function handler(req, res) {
         await client.from('project_images').insert(dupImages);
       }
 
-      return sendJson(res, 201, { status: 'success', data: { id: newId, slug: newSlug } });
+      return sendJson(res, 201, { status: 'success', id: newId, slug: newSlug, data: { id: newId, slug: newSlug } });
     }
 
     if (pathname.startsWith('/api/admin/projects/') && pathname.endsWith('/status') && method === 'PATCH') {

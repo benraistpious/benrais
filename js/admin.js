@@ -78,7 +78,18 @@ async function api(endpoint, options = {}) {
 
   try {
     const res = await fetch(url, { ...options, headers });
-    const data = await res.json();
+    
+    let data;
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      data = await res.json();
+    } else {
+      const text = await res.text();
+      if (res.status === 404) {
+        throw new Error(`API endpoint not found (404) at ${url}. Check server or Vercel rewrites.`);
+      }
+      throw new Error(`Server returned unexpected response (${res.status}): ${text.slice(0, 120)}`);
+    }
 
     if (res.status === 401) {
       handleUnauthorized();
